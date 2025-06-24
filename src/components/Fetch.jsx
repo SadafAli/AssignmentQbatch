@@ -70,8 +70,8 @@ const Fetch = () => {
   return (
     <div className="p-4 max-w-7xl mx-auto">
       {/* top bar */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold decoration-stone-950">Title</h2>
+      <div className="flex flex-col sm:justify-between items-center sm:flex-row mb-4">
+        <h2 className="text-xl font-bold decoration-stone-950 mb-3 sm:mb-0">Title</h2>
         <div>
           <button className="bg-stone-950 text-white text-sm font-semibold px-4 py-2 mr-3 cursor-pointer rounded-full">
             Filter
@@ -152,7 +152,6 @@ const Fetch = () => {
       {/* Paginations */}
       <div className="flex justify-between items-center mt-4 gap-2 flex-wrap">
         <span className="text-sm font-semibold text-gray-400">
-          {" "}
           {currentPage} of {totalPages} Records
         </span>
         <div className="ml-auto">

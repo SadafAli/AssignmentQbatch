@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faFilter } from "@fortawesome/free-solid-svg-icons";
+import Button from "./Button";
 
 const Fetch = () => {
   const [posts, setPosts] = useState([]);
@@ -71,23 +74,26 @@ const Fetch = () => {
     <div className="p-4 max-w-7xl mx-auto">
       {/* top bar */}
       <div className="flex flex-col sm:justify-between items-center sm:flex-row mb-4">
-        <h2 className="text-xl font-bold decoration-stone-950 mb-3 sm:mb-0">Title</h2>
+        <h2 className="text-xl font-bold decoration-stone-950 mb-3 sm:mb-0">
+          Title
+        </h2>
         <div>
-          <button className="bg-stone-950 text-white text-sm font-semibold px-4 py-2 mr-3 cursor-pointer rounded-full">
+          <Button variant="secondary" className="mr-3">
+            <FontAwesomeIcon icon={faFilter} className="mr-2" />
             Filter
-          </button>
-          <button
-            className="bg-blue-500 text-white text-sm font-semibold px-4 py-2 cursor-pointer rounded-full"
+          </Button>
+          <Button
             onClick={() => setIsModalOpen(true)}
+            variant="primary"
           >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Item
-          </button>
+          </Button>
         </div>
       </div>
       {loading ? (
         <p>Loading...</p>
       ) : (
-
         // main data display
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
           {currentPosts.map((post) => (
@@ -146,8 +152,6 @@ const Fetch = () => {
           </div>
         </div>
       )}
-
-
 
       {/* Paginations */}
       <div className="flex justify-between items-center mt-4 gap-2 flex-wrap">

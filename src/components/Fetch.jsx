@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faFilter } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
+import AddItemModal from "./AddItemModal";
+import PostsList from "./PostsList";
+import Pagination from "./Pagination";
 
 const Fetch = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newBody, setNewBody] = useState("");
+  const [newTitle, setnewTitle] = useState("");
+  const [newBody, setnewBody] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 12;
@@ -48,8 +51,8 @@ const Fetch = () => {
       if (response.ok) {
         const createdItem = await response.json();
         setPosts((prevItems) => [createdItem, ...prevItems]);
-        setNewTitle("");
-        setNewBody("");
+        setnewTitle("");
+        setnewBody("");
         setIsModalOpen(false);
         setCurrentPage(1);
       }
@@ -82,10 +85,7 @@ const Fetch = () => {
             <FontAwesomeIcon icon={faFilter} className="mr-2" />
             Filter
           </Button>
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            variant="primary"
-          >
+          <Button onClick={() => setIsModalOpen(true)} variant="primary">
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Item
           </Button>
@@ -95,99 +95,24 @@ const Fetch = () => {
         <p>Loading...</p>
       ) : (
         // main data display
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
-          {currentPosts.map((post) => (
-            <div key={post.id} className="p-5 bg-white rounded-2xl">
-              <h2 className="text-lg font-bold decoration-stone-950">
-                {post.title}
-              </h2>
-              <p className="text-sm decoration-stone-950">{post.body}</p>
-            </div>
-          ))}
-        </div>
+        <PostsList posts={currentPosts} />
       )}
 
-      {isModalOpen && (
-        <div
-          className="modal-overlay fixed top-0 left-0 w-screen h-full bg-gray-900/75 transition-opacity flex justify-center items-center"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="modal bg-white relative p-5 rounded-2xl min-w-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold decoration-stone-950">
-                Create New Cart{" "}
-              </h3>
-              <span
-                className="close text-2xl cursor-pointer decoration-stone-950"
-                onClick={() => setIsModalOpen(false)}
-              >
-                &times;
-              </span>
-            </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
-            <input
-              type="text"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Header"
-              className="border-0 rounded-full outline-0 bg-gray-100 w-full text-sm decoration-stone-950 font-semibold p-3 mb-2"
-            />
-            <textarea
-              value={newBody}
-              onChange={(e) => setNewBody(e.target.value)}
-              placeholder="Description"
-              className="border-0 rounded-xl outline-0 bg-gray-100 w-full text-sm decoration-stone-950 font-semibold p-3"
-            ></textarea>
-
-            <span className="block bg-gray-100 w-full h-[1px] my-3"></span>
-            <button
-              className="bg-gray-600 text-white text-sm font-semibold rounded-full p-2 w-full cursor-pointer ransition-all"
-              onClick={handleSubmit}
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Paginations */}
-      <div className="flex justify-between items-center mt-4 gap-2 flex-wrap">
-        <span className="text-sm font-semibold text-gray-400">
-          {currentPage} of {totalPages} Records
-        </span>
-        <div className="ml-auto">
-          <button
-            className="p-1 text-sm font-semibold text-gray-400"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`p-1 text-sm font-semibold ${
-                currentPage === index + 1
-                  ? "text-blue-500"
-                  : "text-gray-400 hover:text-blue-500"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button
-            className="p-1 text-sm font-semibold text-gray-400"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </button>
-        </div>
-      </div>
+      <AddItemModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        newTitle={newTitle}
+        setnewTitle={setnewTitle}
+        newBody={newBody}
+        setnewBody={setnewBody}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };
